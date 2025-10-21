@@ -2,9 +2,7 @@
 
 using namespace std;
 
-// ============================================================
-// CLASE BASE ABSTRACTA: MatrizBase<T>
-// ============================================================
+//CLASE BASEE
 template <typename T>
 class MatrizBase {
 protected:
@@ -18,27 +16,24 @@ public:
     // Destructor virtual
     virtual ~MatrizBase() {}
     
-    // Métodos virtuales puros (obligatorios en clases derivadas)
+    // Métodos virtuales
     virtual void cargarValores() = 0;
     virtual MatrizBase<T>* sumar(const MatrizBase<T>& otra) const = 0;
     virtual void imprimir() const = 0;
     
-    // Sobrecarga del operador +
+    // Sobrecarga del operador MAS
     MatrizBase<T>* operator+(const MatrizBase<T>& otra) const {
         return this->sumar(otra);
     }
     
-    // Getters para acceso a dimensiones
+    // Mis Getters
     int getFilas() const { return _filas; }
     int getColumnas() const { return _columnas; }
     
-    // Método para acceder a un elemento (virtual puro)
+    // Método para acceder a un elemento
     virtual T getElemento(int i, int j) const = 0;
 };
-
-// ============================================================
-// CLASE CONCRETA: MatrizDinamica<T>
-// ============================================================
+//--------------------------------------------------------------
 template <typename T>
 class MatrizDinamica : public MatrizBase<T> {
 private:
@@ -62,12 +57,12 @@ private:
             _datos = nullptr;
         }
     }
-
+//------------------------------------------------------------------
 public:
-    // Constructor
+    
     MatrizDinamica(int filas, int columnas) : MatrizBase<T>(filas, columnas) {
         asignarMemoria();
-        // Inicializar en ceros
+        // Inicializar en ceross
         for (int i = 0; i < this->_filas; i++) {
             for (int j = 0; j < this->_columnas; j++) {
                 _datos[i][j] = T(0);
@@ -76,13 +71,13 @@ public:
         cout << "Matriz Dinamica creada (" << this->_filas << "x" << this->_columnas << ")" << endl;
     }
     
-    // Destructor (REGLA DE LOS CINCO - 1/5)
+    // Destructor
     ~MatrizDinamica() {
         cout << "Liberando memoria de Matriz Dinamica..." << endl;
         liberarMemoria();
     }
     
-    // Constructor de Copia (REGLA DE LOS CINCO - 2/5)
+    // Constructor de Copia 
     MatrizDinamica(const MatrizDinamica<T>& otra) : MatrizBase<T>(otra._filas, otra._columnas) {
         asignarMemoria();
         // Copia profunda
@@ -92,8 +87,7 @@ public:
             }
         }
     }
-    
-    // Operador de Asignación (REGLA DE LOS CINCO - 3/5)
+    // Operador de Asignación 
     MatrizDinamica<T>& operator=(const MatrizDinamica<T>& otra) {
         if (this != &otra) {
             // Liberar memoria actual
@@ -114,7 +108,6 @@ public:
         return *this;
     }
     
-    // Constructor de Movimiento (REGLA DE LOS CINCO - 4/5)
     MatrizDinamica(MatrizDinamica<T>&& otra) : MatrizBase<T>(otra._filas, otra._columnas) {
         _datos = otra._datos;
         otra._datos = nullptr;
@@ -122,7 +115,6 @@ public:
         otra._columnas = 0;
     }
     
-    // Operador de Asignación por Movimiento (REGLA DE LOS CINCO - 5/5)
     MatrizDinamica<T>& operator=(MatrizDinamica<T>&& otra) {
         if (this != &otra) {
             liberarMemoria();
@@ -137,8 +129,8 @@ public:
         }
         return *this;
     }
-    
-    // Implementación de cargarValores
+    //----------------------------------------------------------
+    // Implementación del metodo cargarValores
     void cargarValores() {
         cout << "Ingrese los valores para la matriz (" << this->_filas << "x" << this->_columnas << "):" << endl;
         for (int i = 0; i < this->_filas; i++) {
@@ -148,8 +140,6 @@ public:
             }
         }
     }
-    
-    // Método para cargar valores predefinidos (útil para demostración)
     void cargarValoresPredefinidos(T valores[][10], int cols) {
         for (int i = 0; i < this->_filas; i++) {
             for (int j = 0; j < this->_columnas; j++) {
@@ -158,18 +148,16 @@ public:
         }
     }
     
-    // Implementación de sumar (POLIMORFISMO)
+    // Implementación de sumar
     MatrizBase<T>* sumar(const MatrizBase<T>& otra) const {
-        // Verificar dimensiones compatibles
+      
         if (this->_filas != otra.getFilas() || this->_columnas != otra.getColumnas()) {
             cout << "Error: Las matrices deben tener las mismas dimensiones." << endl;
             return nullptr;
         }
         
-        // Crear nueva matriz dinámica para el resultado
         MatrizDinamica<T>* resultado = new MatrizDinamica<T>(this->_filas, this->_columnas);
         
-        // Realizar la suma elemento por elemento
         for (int i = 0; i < this->_filas; i++) {
             for (int j = 0; j < this->_columnas; j++) {
                 resultado->_datos[i][j] = _datos[i][j] + otra.getElemento(i, j);
@@ -179,7 +167,6 @@ public:
         return resultado;
     }
     
-    // Implementación de imprimir
     void imprimir() const {
         for (int i = 0; i < this->_filas; i++) {
             cout << "|";
@@ -191,15 +178,11 @@ public:
         }
     }
     
-    // Implementación de getElemento
     T getElemento(int i, int j) const {
         return _datos[i][j];
     }
 };
 
-// ============================================================
-// CLASE CONCRETA: MatrizEstatica<T, M, N>
-// ============================================================
 template <typename T, int M, int N>
 class MatrizEstatica : public MatrizBase<T> {
 private:
@@ -244,33 +227,23 @@ public:
     
     // Implementación de sumar
     MatrizBase<T>* sumar(const MatrizBase<T>& otra) const {
-        // Verificar dimensiones
         if (M != otra.getFilas() || N != otra.getColumnas()) {
             cout << "Error: Las matrices deben tener las mismas dimensiones." << endl;
             return nullptr;
         }
         
-        // Crear nueva matriz dinámica para el resultado
         MatrizDinamica<T>* resultado = new MatrizDinamica<T>(M, N);
         
-        // Realizar la suma
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
                 T suma = _datos[i][j] + otra.getElemento(i, j);
-                // Accedemos directamente al elemento usando un cast
                 MatrizDinamica<T>* temp = dynamic_cast<MatrizDinamica<T>*>(resultado);
-                // Como no podemos acceder directamente a _datos privado,
-                // usamos un método auxiliar o hacemos friend
-                // Por simplicidad, reconstruimos la suma completa
             }
         }
-        
-        // Segunda pasada para llenar resultado (solución práctica)
+    
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                // Usamos getElemento y una asignación manual
                 T suma = _datos[i][j] + otra.getElemento(i, j);
-                // Acceso mediante casting y reconstrucción
                 delete resultado;
                 resultado = new MatrizDinamica<T>(M, N);
                 break;
@@ -278,7 +251,6 @@ public:
             break;
         }
         
-        // Solución correcta: recrear con valores correctos
         delete resultado;
         resultado = new MatrizDinamica<T>(M, N);
         T valoresTemp[M][10];
@@ -292,7 +264,6 @@ public:
         return resultado;
     }
     
-    // Implementación de imprimir
     void imprimir() const {
         for (int i = 0; i < M; i++) {
             cout << "|";
@@ -309,12 +280,113 @@ public:
         return _datos[i][j];
     }
 };
-
-// ============================================================
-// FUNCIÓN PRINCIPAL
-// ============================================================
+//--------------------------------------------------------------------
 int main() {
-   
+    cout << "--- Sistema Generico de Algebra Lineal ---" << endl << endl;
+    //LOS FLOATS =====
+    cout << ">> Demostracion de Genericidad (Tipo FLOAT) <<" << endl << endl;
+    
+    // 1. Creación de Matriz Dinámica A
+    cout << "// 1. Creacion de Matriz Dinamica A (3x2)..." << endl;
+    MatrizBase<float>* A = new MatrizDinamica<float>(3, 2);
+    
+    // Cargar valores predefinidos en A
+    float valoresA[3][10] = {
+        {1.5f, 2.0f},
+        {0.0f, 1.0f},
+        {4.5f, 3.0f}
+    };
+    dynamic_cast<MatrizDinamica<float>*>(A)->cargarValoresPredefinidos(valoresA, 2);
+    
+    cout << "A =" << endl;
+    A->imprimir();
+    cout << endl;
+    
+    // 2. Creación de Matriz Estática B
+    cout << "// 2. Creacion de Matriz Estatica B (3x2)..." << endl;
+    MatrizEstatica<float, 3, 2>* BEstatica = new MatrizEstatica<float, 3, 2>();
+    MatrizBase<float>* B = BEstatica;
+    
+    // Cargar valores predefinidos en B
+    float valoresB[3][2] = {
+        {0.5f, 1.0f},
+        {2.0f, 3.0f},
+        {1.0f, 1.0f}
+    };
+    BEstatica->cargarValoresPredefinidos(valoresB);
+    
+    cout << "B =" << endl;
+    B->imprimir();
+    cout << endl;
+    
+    // 3. Operación Polimórfica - Suma usando operador +
+    cout << "// 3. Operacion Polimorfica (Suma)" << endl;
+    cout << "SUMANDO: Matriz C = A + B ..." << endl;
+    cout << "(La suma es manejada por el metodo virtual de MatrizDinamica)" << endl << endl;
+    
+    MatrizBase<float>* C = (*A) + (*B);
+    
+    if (C != nullptr) {
+        cout << "Matriz Resultado C (3x2, Tipo FLOAT):" << endl;
+        C->imprimir();
+        cout << endl;
+    }
+    
+    // LOS INT =====
+    cout << endl << ">> Demostracion con Tipo INT <<" << endl << endl;
+    
+    MatrizBase<int>* D = new MatrizDinamica<int>(2, 2);
+    int valoresD[2][10] = {
+        {5, 10},
+        {15, 20}
+    };
+    dynamic_cast<MatrizDinamica<int>*>(D)->cargarValoresPredefinidos(valoresD, 2);
+    
+    MatrizEstatica<int, 2, 2>* EEstatica = new MatrizEstatica<int, 2, 2>();
+    MatrizBase<int>* E = EEstatica;
+    int valoresE[2][2] = {
+        {1, 2},
+        {3, 4}
+    };
+    EEstatica->cargarValoresPredefinidos(valoresE);
+    
+    cout << "Matriz D (INT):" << endl;
+    D->imprimir();
+    cout << endl;
+    
+    cout << "Matriz E (INT):" << endl;
+    E->imprimir();
+    cout << endl;
+    
+    cout << "Suma F = D + E:" << endl;
+    MatrizBase<int>* F = D->sumar(*E);
+    if (F != nullptr) {
+        F->imprimir();
+        cout << endl;
+    }
+    
+    // LIMPIAR MEMORIAA
+    cout << ">> Demostracion de Limpieza de Memoria <<" << endl;
+    
+    cout << "Llamando al destructor de C..." << endl;
+    delete C;
+    
+    cout << "Llamando al destructor de A..." << endl;
+    delete A;
+    
+    cout << "Llamando al destructor de B..." << endl;
+    delete B;
+    
+    cout << "Llamando al destructor de D..." << endl;
+    delete D;
+    
+    cout << "Llamando al destructor de E..." << endl;
+    delete E;
+    
+    cout << "Llamando al destructor de F..." << endl;
+    delete F;
+    
+    cout << endl << "Sistema cerrado." << endl;
     
     return 0;
 }
