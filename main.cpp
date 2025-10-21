@@ -1,7 +1,5 @@
 #include <iostream>
 
-using namespace std;
-
 //CLASE BASEE
 template <typename T>
 class MatrizBase {
@@ -282,12 +280,12 @@ public:
 };
 //--------------------------------------------------------------------
 int main() {
-    cout << "--- Sistema Generico de Algebra Lineal ---" << endl << endl;
+    std::cout << "--- Sistema Generico de Algebra Lineal ---" << std::endl << std::endl;
     //LOS FLOATS =====
-    cout << ">> Demostracion de Genericidad (Tipo FLOAT) <<" << endl << endl;
+    std::cout << ">> Demostracion de Genericidad (Tipo FLOAT) <<" << std::endl << std::endl;
     
     // 1. Creación de Matriz Dinámica A
-    cout << "// 1. Creacion de Matriz Dinamica A (3x2)..." << endl;
+    std::cout << "// 1. Creacion de Matriz Dinamica A (3x2)..." << std::endl;
     MatrizBase<float>* A = new MatrizDinamica<float>(3, 2);
     
     // Cargar valores predefinidos en A
@@ -298,12 +296,12 @@ int main() {
     };
     dynamic_cast<MatrizDinamica<float>*>(A)->cargarValoresPredefinidos(valoresA, 2);
     
-    cout << "A =" << endl;
+    std::cout << "A =" << std::endl;
     A->imprimir();
-    cout << endl;
+    std::cout << std::endl;
     
     // 2. Creación de Matriz Estática B
-    cout << "// 2. Creacion de Matriz Estatica B (3x2)..." << endl;
+    std::cout << "// 2. Creacion de Matriz Estatica B (3x2)..." << std::endl;
     MatrizEstatica<float, 3, 2>* BEstatica = new MatrizEstatica<float, 3, 2>();
     MatrizBase<float>* B = BEstatica;
     
@@ -315,25 +313,25 @@ int main() {
     };
     BEstatica->cargarValoresPredefinidos(valoresB);
     
-    cout << "B =" << endl;
+    std::cout << "B =" << std::endl;
     B->imprimir();
-    cout << endl;
+    std::cout << std::endl;
     
     // 3. Operación Polimórfica - Suma usando operador +
-    cout << "// 3. Operacion Polimorfica (Suma)" << endl;
-    cout << "SUMANDO: Matriz C = A + B ..." << endl;
-    cout << "(La suma es manejada por el metodo virtual de MatrizDinamica)" << endl << endl;
+    std::cout << "// 3. Operacion Polimorfica (Suma)" << std::endl;
+    std::cout << "SUMANDO: Matriz C = A + B ..." << std::endl;
+    std::cout << "(La suma es manejada por el metodo virtual de MatrizDinamica)" << std::endl << std::endl;
     
     MatrizBase<float>* C = (*A) + (*B);
     
     if (C != nullptr) {
-        cout << "Matriz Resultado C (3x2, Tipo FLOAT):" << endl;
+        std::cout << "Matriz Resultado C (3x2, Tipo FLOAT):" << std::endl;
         C->imprimir();
-        cout << endl;
+        std::cout << std::endl;
     }
     
     // LOS INT =====
-    cout << endl << ">> Demostracion con Tipo INT <<" << endl << endl;
+    std::cout << std::endl << ">> Demostracion con Tipo INT <<" << std::endl << std::endl;
     
     MatrizBase<int>* D = new MatrizDinamica<int>(2, 2);
     int valoresD[2][10] = {
@@ -350,43 +348,43 @@ int main() {
     };
     EEstatica->cargarValoresPredefinidos(valoresE);
     
-    cout << "Matriz D (INT):" << endl;
+    std::cout << "Matriz D (INT):" << std::endl;
     D->imprimir();
-    cout << endl;
+    std::cout << std::endl;
     
-    cout << "Matriz E (INT):" << endl;
+    std::cout << "Matriz E (INT):" << std::endl;
     E->imprimir();
-    cout << endl;
+    std::cout << std::endl;
     
-    cout << "Suma F = D + E:" << endl;
+    std::cout << "Suma F = D + E:" << std::endl;
     MatrizBase<int>* F = D->sumar(*E);
     if (F != nullptr) {
         F->imprimir();
-        cout << endl;
+        std::cout << std::endl;
     }
     
     // LIMPIAR MEMORIAA
-    cout << ">> Demostracion de Limpieza de Memoria <<" << endl;
+    std::cout << ">> Demostracion de Limpieza de Memoria <<" << std::endl;
     
-    cout << "Llamando al destructor de C..." << endl;
+    std::cout << "Llamando al destructor de C..." << std::endl;
     delete C;
     
-    cout << "Llamando al destructor de A..." << endl;
+    std::cout << "Llamando al destructor de A..." << std::endl;
     delete A;
     
-    cout << "Llamando al destructor de B..." << endl;
+    std::cout << "Llamando al destructor de B..." << std::endl;
     delete B;
     
-    cout << "Llamando al destructor de D..." << endl;
+    std::cout << "Llamando al destructor de D..." << std::endl;
     delete D;
     
-    cout << "Llamando al destructor de E..." << endl;
+    std::cout << "Llamando al destructor de E..." << std::endl;
     delete E;
     
-    cout << "Llamando al destructor de F..." << endl;
+    std::cout << "Llamando al destructor de F..." << std::endl;
     delete F;
     
-    cout << endl << "Sistema cerrado." << endl;
+    std::cout << std::endl << "Sistema cerrado." << std::endl;
     
     return 0;
 }
